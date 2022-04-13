@@ -25,6 +25,9 @@ public class GearHookshot extends Gear {
     @DBField protected int customModelData = 0;
     @DBField protected double fireRange;
 
+    private final Material heldMaterial = Material.BLAZE_ROD;
+    //private final Material heldMaterial = Material.IRON_NUGGET;
+
     private ItemStack available;
     private ItemStack unavailable;
 
@@ -82,8 +85,8 @@ public class GearHookshot extends Gear {
 
     @Override
     protected void createGearItems() {
-        available = applyPersistents(InventoryMenuUtils.createCustomItem(Material.IRON_NUGGET, 1));
-        unavailable = applyPersistents(InventoryMenuUtils.createCustomItem(Material.IRON_NUGGET, 2));
+        available = applyPersistents(InventoryMenuUtils.createCustomItem(heldMaterial, 1));
+        unavailable = applyPersistents(InventoryMenuUtils.createCustomItem(heldMaterial, 2));
     }
 
     @Override
