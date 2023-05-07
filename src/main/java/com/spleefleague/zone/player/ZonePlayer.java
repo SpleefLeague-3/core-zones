@@ -7,6 +7,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.spleefleague.core.Core;
 import com.spleefleague.core.chat.Chat;
 import com.spleefleague.core.player.CoreDBPlayer;
+import com.spleefleague.coreapi.chat.ChatColor;
 import com.spleefleague.coreapi.database.annotation.DBField;
 import com.spleefleague.coreapi.player.options.PlayerOptions;
 import com.spleefleague.zone.CoreZones;
@@ -14,10 +15,8 @@ import com.spleefleague.zone.gear.Gear;
 import com.spleefleague.zone.player.fragments.PlayerFragments;
 import com.spleefleague.zone.player.world.HarvestWorld;
 import com.spleefleague.zone.zones.Zone;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.WeatherType;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -164,10 +163,7 @@ public class ZonePlayer extends CoreDBPlayer {
     }
 
     public void sendHotbarText(String text) {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.CHAT);
-        packet.getChatTypes().write(0, EnumWrappers.ChatType.GAME_INFO);
-        packet.getChatComponents().write(0, WrappedChatComponent.fromText(text));
-        Core.sendPacket(player, packet);
+        Core.getInstance().getPlayers().get(this).sendHotbarText(text);
     }
 
     public PlayerOptions getOptions() {

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.spleefleague.core.Core;
 import com.spleefleague.core.menu.InventoryMenuUtils;
 import com.spleefleague.core.player.CorePlayer;
-import com.spleefleague.core.world.game.projectile.ProjectileStats;
+import com.spleefleague.core.world.projectile.ProjectileStats;
 import com.spleefleague.coreapi.database.annotation.DBField;
 import com.spleefleague.zone.gear.Gear;
 import org.bukkit.Bukkit;

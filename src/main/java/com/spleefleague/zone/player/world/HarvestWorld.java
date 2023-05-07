@@ -4,7 +4,7 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 import com.spleefleague.core.Core;
 import com.spleefleague.core.player.CorePlayer;
 import com.spleefleague.core.world.FakeWorld;
-import com.spleefleague.core.world.game.GameWorld;
+import com.spleefleague.core.world.projectile.game.GameWorld;
 import com.spleefleague.zone.CoreZones;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

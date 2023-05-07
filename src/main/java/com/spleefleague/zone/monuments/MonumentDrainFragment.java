@@ -1,6 +1,6 @@
 package com.spleefleague.zone.monuments;
 
-import com.spleefleague.core.world.FakeUtils;
+import com.spleefleague.core.world.FakeUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
  */
 public class MonumentDrainFragment {
 
-    final int entityId = FakeUtils.getNextId();
+    final int entityId = FakeUtil.getNextId();
 
     private static final double SPEED = 30;
 

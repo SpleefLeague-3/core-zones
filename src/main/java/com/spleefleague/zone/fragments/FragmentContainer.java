@@ -2,36 +2,29 @@ package com.spleefleague.zone.fragments;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
-import com.google.common.util.concurrent.AtomicDouble;
 import com.spleefleague.core.Core;
 import com.spleefleague.core.menu.InventoryMenuAPI;
 import com.spleefleague.core.menu.InventoryMenuItem;
 import com.spleefleague.core.menu.InventoryMenuUtils;
 import com.spleefleague.core.player.CorePlayer;
-import com.spleefleague.core.util.MathUtils;
 import com.spleefleague.core.util.variable.Point;
 import com.spleefleague.core.world.ChunkCoord;
-import com.spleefleague.core.world.global.GlobalWorld;
 import com.spleefleague.coreapi.database.annotation.DBField;
 import com.spleefleague.coreapi.database.annotation.DBLoad;
 import com.spleefleague.coreapi.database.annotation.DBSave;
 import com.spleefleague.coreapi.database.variable.DBEntity;
 import com.spleefleague.zone.CoreZones;
 import com.spleefleague.zone.player.ZonePlayer;
-import com.spleefleague.zone.player.fragments.PlayerFragments;
-import net.minecraft.server.v1_15_R1.ItemStack;
-import net.minecraft.server.v1_15_R1.PacketPlayOutEntityDestroy;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
+import net.minecraft.world.item.ItemStack;
 import org.bson.Document;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * @author NickM13
@@ -52,10 +45,9 @@ public class FragmentContainer extends DBEntity {
 
     private org.bukkit.inventory.ItemStack uncollectedItem;
     private org.bukkit.inventory.ItemStack collectedItem;
+    private ItemStack uncollectedItemNMS;
+    private ItemStack collectedItemNMS;
     private org.bukkit.inventory.ItemStack menuItem;
-
-    private net.minecraft.server.v1_15_R1.ItemStack uncollectedItemNMS;
-    private net.minecraft.server.v1_15_R1.ItemStack collectedItemNMS;
 
     private int total = 0;
 
@@ -92,12 +84,12 @@ public class FragmentContainer extends DBEntity {
         return uncollectedItem;
     }
 
-    public ItemStack getUncollectedItemNMS() {
-        return uncollectedItemNMS;
-    }
-
     public org.bukkit.inventory.ItemStack getCollectedItem() {
         return collectedItem;
+    }
+
+    public ItemStack getUncollectedItemNMS() {
+        return uncollectedItemNMS;
     }
 
     public ItemStack getCollectedItemNMS() {
@@ -110,13 +102,13 @@ public class FragmentContainer extends DBEntity {
 
     private void initItems() {
         uncollectedItem = InventoryMenuUtils.createCustomItem(Material.HONEYCOMB, uncollectedCmd);
-        uncollectedItemNMS = CraftItemStack.asNMSCopy(uncollectedItem);
         collectedItem = InventoryMenuUtils.createCustomItem(Material.HONEYCOMB, collectedCmd);
-        collectedItemNMS = CraftItemStack.asNMSCopy(collectedItem);
         menuItem = InventoryMenuUtils.createCustomItem(Material.HONEYCOMB, menuCmd);
         for (FragmentChunk chunk : fragmentChunkMap.values()) {
-            chunk.setItems(uncollectedItemNMS, collectedItemNMS);
+            chunk.setItems(uncollectedItem, collectedItem);
         }
+        uncollectedItemNMS = CraftItemStack.asNMSCopy(uncollectedItem);
+        collectedItemNMS = CraftItemStack.asNMSCopy(collectedItem);
     }
 
     public void setItemCmds(int uncollectedCmd, int collectedCmd) {
@@ -190,7 +182,7 @@ public class FragmentContainer extends DBEntity {
         boolean chunkAdd = false;
         if (!fragmentChunkMap.containsKey(chunkCoord)) {
             FragmentChunk chunk = new FragmentChunk((short) chunkCoord.x, (short) chunkCoord.z);
-            chunk.setItems(uncollectedItemNMS, collectedItemNMS);
+            chunk.setItems(uncollectedItem, collectedItem);
             fragmentChunkMap.put(chunkCoord, chunk);
             chunkAdd = true;
         }

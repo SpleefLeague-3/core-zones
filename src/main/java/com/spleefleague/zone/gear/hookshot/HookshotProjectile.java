@@ -5,12 +5,14 @@ import com.spleefleague.core.Core;
 import com.spleefleague.core.player.CorePlayer;
 import com.spleefleague.core.util.variable.BlockRaycastResult;
 import com.spleefleague.core.util.variable.EntityRaycastResult;
-import com.spleefleague.core.world.game.projectile.FakeEntitySnowball;
-import com.spleefleague.core.world.game.projectile.ProjectileStats;
-import com.spleefleague.core.world.game.projectile.ProjectileWorld;
-import com.spleefleague.core.world.global.GlobalWorld;
-import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
+import com.spleefleague.core.world.projectile.FakeEntitySnowball;
+import com.spleefleague.core.world.projectile.ProjectileStats;
+import com.spleefleague.core.world.projectile.ProjectileWorld;
+import com.spleefleague.core.world.projectile.global.GlobalWorld;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
@@ -45,21 +47,14 @@ public class HookshotProjectile extends FakeEntitySnowball {
 
     public Vector getHookPos() {
         if (hookedBlock != null) {
-            switch (hookedBlock.getFace()) {
-                case DOWN:
-                    return getBukkitEntity().getLocation().toVector().subtract(new Vector(0, 1.8, 0));
-                case NORTH:
-                    return getBukkitEntity().getLocation().toVector().add(new Vector(0, 0, -.3));
-                case EAST:
-                    return getBukkitEntity().getLocation().toVector().add(new Vector(.3, 0, 0));
-                case SOUTH:
-                    return getBukkitEntity().getLocation().toVector().add(new Vector(0, 0, .3));
-                case WEST:
-                    return getBukkitEntity().getLocation().toVector().add(new Vector(-.3, 0, 0));
-                case UP:
-                default:
-                    return getBukkitEntity().getLocation().toVector();
-            }
+            return switch (hookedBlock.getFace()) {
+                case DOWN -> getBukkitEntity().getLocation().toVector().subtract(new Vector(0, 1.8, 0));
+                case NORTH -> getBukkitEntity().getLocation().toVector().add(new Vector(0, 0, -.3));
+                case EAST -> getBukkitEntity().getLocation().toVector().add(new Vector(.3, 0, 0));
+                case SOUTH -> getBukkitEntity().getLocation().toVector().add(new Vector(0, 0, .3));
+                case WEST -> getBukkitEntity().getLocation().toVector().add(new Vector(-.3, 0, 0));
+                case UP, default -> getBukkitEntity().getLocation().toVector();
+            };
         } else if (hookedEntity != null) {
             return getBukkitEntity().getLocation().toVector().subtract(new Vector(0, 1.8, 0));
         }
@@ -67,7 +62,7 @@ public class HookshotProjectile extends FakeEntitySnowball {
     }
 
     @Override
-    protected void onEntityHit(Entity craftEntity, EntityRaycastResult entityRaycastResult) {
+    protected void onEntityHit(EntityRaycastResult entityRaycastResult) {
         /*
         if (!isHooked()) {
             craftEntity.setGravity(false);
@@ -84,17 +79,17 @@ public class HookshotProjectile extends FakeEntitySnowball {
     private static final Material HOOK_BLOCK = Material.CHISELED_STONE_BRICKS;
 
     @Override
-    protected boolean onBlockHit(Entity craftEntity, BlockRaycastResult blockRaycastResult, Vector direction) {
+    protected boolean onBlockHit(BlockRaycastResult blockRaycastResult, Vector direction) {
         if (!isHooked()) {
             BlockPosition pos = blockRaycastResult.getBlockPos();
             Material material = projectileWorld.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()).getType();
             if (material.equals(HOOK_BLOCK)) {
-                craftEntity.setGravity(false);
-                craftEntity.setVelocity(new Vector(0, 0, 0));
-                craftEntity.teleport(blockRaycastResult.getIntersection().toLocation(craftEntity.getWorld()));
+                getBukkitEntity().setGravity(false);
+                getBukkitEntity().setVelocity(new Vector(0, 0, 0));
+                getBukkitEntity().teleport(blockRaycastResult.getIntersection().toLocation(getBukkitEntity().getWorld()));
                 hookedBlock = blockRaycastResult;
-                reelTime = craftEntity.getTicksLived() + (int) (REELTIME * 20);
-                hookLife = craftEntity.getTicksLived() + (int) (HOOKLIFE * 20);
+                reelTime = getBukkitEntity().getTicksLived() + (int) (REELTIME * 20);
+                hookLife = getBukkitEntity().getTicksLived() + (int) (HOOKLIFE * 20);
                 ((GlobalWorld) projectileWorld).playSound(pos.toLocation(projectileWorld.getWorld()), Sound.BLOCK_ANVIL_LAND, 1, 1, "Sound:Gadget");
                 cpShooter.getPlayer().setGravity(false);
             } else {
@@ -106,11 +101,10 @@ public class HookshotProjectile extends FakeEntitySnowball {
     }
 
     @Override
-    public void tick() {
-        CraftEntity craftEntity = getBukkitEntity();
+    public void ao() {
         if (!isHooked()) {
-            super.tick();
-        } else if (hookLife < craftEntity.getTicksLived() || cpShooter.getPlayer().isSneaking() || toKill) {
+            super.ao();
+        } else if (hookLife < getBukkitEntity().getTicksLived() || cpShooter.getPlayer().isSneaking() || toKill) {
             killEntity();
             if (toKill) {
                 cpShooter.getPlayer().setVelocity(cpShooter.getPlayer().getLocation().getDirection().multiply(1));
@@ -124,14 +118,14 @@ public class HookshotProjectile extends FakeEntitySnowball {
                 cpShooter.getPlayer().setVelocity(new Vector(0, 0, 0));
                 if (reelTime > 0) {
                     reelTime = -1;
-                    hookLife = craftEntity.getTicksLived() + (int) (HOOKLIFE * 20);
+                    hookLife = getBukkitEntity().getTicksLived() + (int) (HOOKLIFE * 20);
                 }
             } else {
                 cpShooter.getPlayer().setVelocity(diff.normalize().multiply(Math.min(1., getHookPos().distance(cpShooter.getPlayer().getLocation().toVector()) / 5.)));
             }
         }
         if (hookedEntity != null) {
-            craftEntity.teleport(hookedEntity.getEntity().getLocation().clone().add(hookedEntity.getOffset()));
+            getBukkitEntity().teleport(hookedEntity.getEntity().getLocation().clone().add(hookedEntity.getOffset()));
         }
     }
 

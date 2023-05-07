@@ -14,8 +14,6 @@ import com.spleefleague.core.util.CoreUtils;
 import com.spleefleague.core.util.variable.BlockRaycastResult;
 import com.spleefleague.core.util.variable.Point;
 import com.spleefleague.core.world.ChunkCoord;
-import com.spleefleague.core.world.FakeBlock;
-import com.spleefleague.core.world.global.GlobalWorld;
 import com.spleefleague.zone.CoreZones;
 import com.spleefleague.zone.player.ZonePlayer;
 import org.bson.Document;
@@ -23,7 +21,6 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.BoundingBox;
 
 import java.util.*;
 

@@ -2,21 +2,16 @@ package com.spleefleague.zone.fragments;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.NetworkMarker;
 import com.comphenix.protocol.events.PacketContainer;
-import com.google.common.collect.Sets;
 import com.spleefleague.core.Core;
 import com.spleefleague.core.util.variable.Point;
 import com.spleefleague.coreapi.database.variable.DBVariable;
-import com.spleefleague.zone.player.ZonePlayer;
-import com.spleefleague.zone.player.fragments.PlayerFragments;
-import net.minecraft.server.v1_15_R1.*;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import org.bson.Document;
-import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
+import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -71,6 +66,8 @@ public class FragmentChunk extends DBVariable<Document> {
     public void setItems(ItemStack uncollectedItem, ItemStack collectedItem) {
         this.uncollectedItem = uncollectedItem;
         this.collectedItem = collectedItem;
+        this.uncollectedItemNMS = CraftItemStack.asNMSCopy(uncollectedItem);
+        this.collectedItemNMS = CraftItemStack.asNMSCopy(collectedItem);
     }
 
     private void initIdArray() {
@@ -129,11 +126,7 @@ public class FragmentChunk extends DBVariable<Document> {
         packet.getIntegerArrays().write(0, new int[]{fragment.entityId});
 
         for (Player p : viewers) {
-            try {
-                protocolManager.sendServerPacket(p, packet, null, false);
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            protocolManager.sendServerPacket(p, packet, null, false);
         }
         return true;
     }
@@ -164,11 +157,7 @@ public class FragmentChunk extends DBVariable<Document> {
             packetLook.getBooleans().write(0, true);
 
             for (Player p : viewers) {
-                try {
-                    protocolManager.sendServerPacket(p, packetLook, null, false);
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                protocolManager.sendServerPacket(p, packetLook, null, false);
             }
         }
     }
@@ -177,6 +166,8 @@ public class FragmentChunk extends DBVariable<Document> {
 
     private ItemStack uncollectedItem;
     private ItemStack collectedItem;
+    private net.minecraft.world.item.ItemStack uncollectedItemNMS;
+    private net.minecraft.world.item.ItemStack collectedItemNMS;
 
     public void sendSpawnPackets(Set<Long> collected, Player player) {
         for (Fragment fragment : fragments.values()) {
@@ -192,15 +183,11 @@ public class FragmentChunk extends DBVariable<Document> {
                 fragment.x + offsetX,
                 fragment.y,
                 fragment.z + offsetZ,
-                uncollectedItem);
+                uncollectedItemNMS);
     }
 
     public void sendDestroyPacket(Player player) {
-        try {
-            protocolManager.sendServerPacket(player, destroyFragmentsPacket, null, false);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        protocolManager.sendServerPacket(player, destroyFragmentsPacket, null, false);
     }
 
 }

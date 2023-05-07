@@ -1,8 +1,6 @@
 package com.spleefleague.zone.fragments;
 
-import com.spleefleague.core.world.FakeUtils;
-
-import java.util.Objects;
+import com.spleefleague.core.world.FakeUtil;
 
 /**
  * @author NickM13
@@ -10,7 +8,7 @@ import java.util.Objects;
  */
 public class Fragment {
 
-    final int entityId = FakeUtils.getNextId();
+    final int entityId = FakeUtil.getNextId();
 
     // 15-8y, 7-4z, 3-0x
     short pos;

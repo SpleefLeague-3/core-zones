@@ -1,22 +1,16 @@
 package com.spleefleague.zone.listener;
 
-import com.comphenix.protocol.wrappers.BlockPosition;
 import com.spleefleague.core.Core;
-import com.spleefleague.core.player.CorePlayer;
 import com.spleefleague.core.vendor.Vendorables;
-import com.spleefleague.core.world.global.GlobalWorld;
 import com.spleefleague.zone.CoreZones;
 import com.spleefleague.zone.gear.Gear;
 import com.spleefleague.zone.gear.hookshot.GearHookshot;
 import com.spleefleague.zone.player.ZonePlayer;
 import com.spleefleague.zone.zones.Zone;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -31,7 +25,9 @@ public class EnvironmentListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.getTo() == null || !CoreZones.getInstance().getPlayers().isLocal(event.getPlayer().getUniqueId())) return;
+        if (!CoreZones.getInstance().getPlayers().isLocal(event.getPlayer().getUniqueId())) {
+            return;
+        }
         CoreZones.getInstance().getZoneManager().onPlayerMove(event.getPlayer(), event.getTo());
         CoreZones.getInstance().getFragmentManager().onPlayerMove(event.getPlayer(), event.getTo());
         CoreZones.getInstance().getMonumentManager().onPlayerMove(event.getPlayer(), event.getTo());
@@ -39,7 +35,9 @@ public class EnvironmentListener implements Listener {
 
     @EventHandler
     public void onPlayerSneak(PlayerToggleSneakEvent event) {
-        if (CoreZones.getInstance().getPlayers().isLocal(event.getPlayer().getUniqueId())) return;
+        if (CoreZones.getInstance().getPlayers().isLocal(event.getPlayer().getUniqueId())) {
+            return;
+        }
         if (event.isSneaking()) {
             GearHookshot.onPlayerSneak(Core.getInstance().getPlayers().get(event.getPlayer()));
         }

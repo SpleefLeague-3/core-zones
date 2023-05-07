@@ -1,17 +1,9 @@
 package com.spleefleague.zone.gear.steampack;
 
-import com.comphenix.protocol.wrappers.BlockPosition;
 import com.spleefleague.core.player.CorePlayer;
-import com.spleefleague.core.util.CoreUtils;
-import com.spleefleague.core.world.global.GlobalWorld;
+import com.spleefleague.core.world.projectile.global.GlobalWorld;
 import com.spleefleague.zone.gear.Gear;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
 /**
  * @author NickM13

@@ -19,7 +19,7 @@ import com.spleefleague.zone.monuments.MonumentMenu;
 import com.spleefleague.zone.player.ZonePlayer;
 import com.spleefleague.zone.player.world.HarvestWorld;
 import com.spleefleague.zone.zones.ZoneManager;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 
 /**
@@ -109,8 +109,8 @@ public class CoreZones extends CorePlugin {
     }
 
     @Override
-    public TextComponent getChatPrefix() {
-        return new TextComponent(Chat.TAG_BRACE + "[" + Chat.TAG + "SL Zones" + Chat.TAG_BRACE + "] " + Chat.DEFAULT);
+    public Component getChatPrefix() {
+        return Component.text(Chat.TAG_BRACE + "[" + Chat.TAG + "SL Zones" + Chat.TAG_BRACE + "] " + Chat.DEFAULT);
     }
 
     @Override

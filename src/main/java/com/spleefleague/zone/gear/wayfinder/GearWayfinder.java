@@ -4,7 +4,7 @@ import com.google.common.util.concurrent.AtomicDouble;
 import com.spleefleague.core.menu.InventoryMenuUtils;
 import com.spleefleague.core.player.CorePlayer;
 import com.spleefleague.core.util.MathUtils;
-import com.spleefleague.core.world.global.GlobalWorld;
+import com.spleefleague.core.world.projectile.global.GlobalWorld;
 import com.spleefleague.zone.CoreZones;
 import com.spleefleague.zone.fragments.FragmentContainer;
 import com.spleefleague.zone.gear.Gear;
@@ -13,8 +13,6 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author NickM13

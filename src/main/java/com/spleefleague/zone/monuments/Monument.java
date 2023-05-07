@@ -9,12 +9,11 @@ import com.spleefleague.core.player.collectible.CollectibleSkin;
 import com.spleefleague.core.util.variable.Position;
 import com.spleefleague.core.vendor.Vendorable;
 import com.spleefleague.core.vendor.Vendorables;
-import com.spleefleague.core.world.FakeUtils;
+import com.spleefleague.core.world.FakeUtil;
 import com.spleefleague.core.world.build.BuildStructure;
 import com.spleefleague.core.world.build.BuildStructures;
-import com.spleefleague.core.world.game.GameUtils;
-import com.spleefleague.core.world.global.GlobalWorld;
-import com.spleefleague.core.world.personal.PersonalWorld;
+import com.spleefleague.core.world.projectile.game.GameUtils;
+import com.spleefleague.core.world.projectile.personal.PersonalWorld;
 import com.spleefleague.coreapi.database.annotation.DBField;
 import com.spleefleague.coreapi.database.variable.DBEntity;
 import com.spleefleague.zone.CoreZones;
@@ -186,7 +185,7 @@ public class Monument extends DBEntity {
         BuildStructure structure = BuildStructures.get(getStructure() + "_" + stage);
         if (structure == null) return;
         monumentWorlds.get(uuid)
-                .overwriteBlocks(FakeUtils.transformBlocks(
+                .overwriteBlocks(FakeUtil.transformBlocks(
                 structure.getFakeBlocks(),
                 getPosition()));
     }
@@ -223,24 +222,24 @@ public class Monument extends DBEntity {
                     reward.apply(corePlayer);
                     Bukkit.getScheduler().runTaskLater(CoreZones.getInstance(), () -> {
                         switch (reward.rewardType) {
-                            case COLLECTIBLE:
+                            case COLLECTIBLE -> {
                                 MonumentStage.RewardCollectible collectible = (MonumentStage.RewardCollectible) reward;
                                 Vendorable vendorable = Vendorables.get(collectible.type, collectible.collectible);
                                 CoreZones.getInstance().sendMessage(corePlayer, "You've received " + vendorable.getDisplayName());
-                                break;
-                            case CURRENCY:
+                            }
+                            case CURRENCY -> {
                                 MonumentStage.RewardCurrency currency = (MonumentStage.RewardCurrency) reward;
                                 CoreZones.getInstance().sendMessage(corePlayer, "You've received " + currency.currency.color + currency.amount + " " + currency.currency.displayName);
-                                break;
-                            case SKIN:
+                            }
+                            case SKIN -> {
                                 MonumentStage.RewardCollectibleSkin skin = (MonumentStage.RewardCollectibleSkin) reward;
                                 Collectible collectible2 = (Collectible) Vendorables.get(skin.type, skin.collectible);
                                 CollectibleSkin collectibleSkin = collectible2.getSkin(skin.skin);
                                 CoreZones.getInstance().sendMessage(corePlayer, "You've received " + collectibleSkin.getFullDisplayName());
-                                break;
+                            }
                         }
                         corePlayer.getGlobalWorld().addRotationItem(corePlayer, reward.getDisplayItem());
-                    }, (delay++) * 20);
+                    }, (delay++) * 20L);
                 }
                 break;
             }
