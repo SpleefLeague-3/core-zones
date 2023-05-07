@@ -53,7 +53,8 @@ public class HookshotProjectile extends FakeEntitySnowball {
                 case EAST -> getBukkitEntity().getLocation().toVector().add(new Vector(.3, 0, 0));
                 case SOUTH -> getBukkitEntity().getLocation().toVector().add(new Vector(0, 0, .3));
                 case WEST -> getBukkitEntity().getLocation().toVector().add(new Vector(-.3, 0, 0));
-                case UP, default -> getBukkitEntity().getLocation().toVector();
+                case UP -> getBukkitEntity().getLocation().toVector().add(new Vector(0, 0, 0));
+                default -> getBukkitEntity().getLocation().toVector();
             };
         } else if (hookedEntity != null) {
             return getBukkitEntity().getLocation().toVector().subtract(new Vector(0, 1.8, 0));

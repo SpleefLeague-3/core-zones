@@ -78,7 +78,6 @@
     </pluginRepositories>
 
     <build>
-        <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <!-- Maven Compiler -->
             <plugin>
@@ -87,9 +86,6 @@
                 <version>3.8.1</version>
                 <configuration>
                     <release>17</release>
-                    <source>17</source>
-                    <target>17</target>
-                    <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
             </plugin>
 
@@ -116,20 +112,38 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.bukkit.craftbukkit</pattern>
-                                    <shadedPattern>com.spleefleague.shaded.org.bukkit.craftbukkit</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.spigotmc</pattern>
-                                    <shadedPattern>com.spleefleague.shaded.org.spigotmc</shadedPattern>
-                                </relocation>
-                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- SpecialSource Plugin -->
+            <!-- plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>deobfuscate-nms</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.spigotmc</groupId>
+                                    <artifactId>minecraft-server</artifactId>
+                                    <version>1.19.4-R0.1-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/nms-src</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/deobf-src</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin -->
 
             <!-- antrun plugin -->
             <plugin>
@@ -153,13 +167,12 @@
                 </executions>
             </plugin>
         </plugins>
-
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh-external</artifactId>
-                <version>2.10</version>
-            </extension>
-        </extensions>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
+
 </project>
