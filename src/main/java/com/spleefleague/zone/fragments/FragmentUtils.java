@@ -6,14 +6,17 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import com.spleefleague.core.Core;
+import com.spleefleague.core.logger.CoreLogger;
 import net.minecraft.network.protocol.game.PacketPlayOutEntity;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
+import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EnumItemSlot;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3D;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
@@ -44,27 +47,8 @@ public class FragmentUtils {
     }
 
     public static void sendSpawnPacket(Player player, int entityId, double x, double y, double z, ItemStack item) {
-        // Create a new packet of type "SPAWN_ENTITY".
-        PacketContainer spawnPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
-        // Set the entity ID to a new unique value.
-        spawnPacket.getIntegers().write(0, player.getEntityId() + 1);
-        // Set the entity UUID to a random value.
-        spawnPacket.getUUIDs().write(0, unused);
-        // Set the entity type to armor stand.
-        spawnPacket.getIntegers().write(1, 2);
-        // Set the location of the armor stand.
-        spawnPacket.getDoubles().write(0, x);
-        spawnPacket.getDoubles().write(1, y);
-        spawnPacket.getDoubles().write(2, z);
-        // Set the pitch and yaw of the armor stand to 0.
-        spawnPacket.getBytes().write(0, (byte) 0);
-        spawnPacket.getBytes().write(1, (byte) 0);
-        // Set the object data to 0.
-        spawnPacket.getIntegers().write(4, 0);
-        // Set velocity to 0.
-        spawnPacket.getShorts().write(0, (short) 0);
-        spawnPacket.getShorts().write(1, (short) 0);
-        spawnPacket.getShorts().write(2, (short) 0);
+        PacketPlayOutSpawnEntity packetPlayOutSpawnEntity = new PacketPlayOutSpawnEntity(entityId, unused, x, y, z, 0, 0, EntityTypes.d, 0, new Vec3D(0, 0, 0), 0);
+        PacketContainer spawnPacket = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY, packetPlayOutSpawnEntity);
 
         List<Pair<EnumItemSlot, net.minecraft.world.item.ItemStack>> items = new ArrayList<>();
         items.add(new Pair<>(EnumItemSlot.f, item));
